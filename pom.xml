@@ -53,6 +53,12 @@
             <version>1.7.30</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>10.2.0.jre11</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -69,7 +75,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        rbd.project.Main
+                                        Main
                                     </mainClass>
                                 </manifest>
                             </archive>
