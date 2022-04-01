@@ -16,7 +16,6 @@ public class ConnectionManagementService {
         DBConnectionData dbConnectionData = new DBConnectionData();
         Properties prop = new Properties();
 
-//        fileName = "db.properties";
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
             dbConnectionData.jdbcUrl = prop.getProperty("jdbc.url");
