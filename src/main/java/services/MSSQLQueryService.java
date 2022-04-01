@@ -1,6 +1,7 @@
 package services;
 
 import interfaces.DBService;
+import models.DBConnectionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,32 +15,11 @@ public class MSSQLQueryService implements DBService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public MSSQLQueryService(String jdbcUrl, String dbName, String dbLogin, String dbPassword) {
-        this.jdbcUrl = jdbcUrl;
-        this.dbName = dbName;
-        this.dbLogin = dbLogin;
-        this.dbPassword = dbPassword;
-    }
-
-    public MSSQLQueryService(String dbName, String dbLogin, String dbPassword) {
-        this.dbName = dbName;
-        this.jdbcUrl = "jdbc:sqlserver://localhost:1433;database=" + this.dbName + ";trustServerCertificate=true";
-        this.dbLogin = dbLogin;
-        this.dbPassword = dbPassword;
-    }
-
-    public MSSQLQueryService(String jdbcUrl, String dbName) {
-        this.jdbcUrl = jdbcUrl;
-        this.dbName = dbName;
-        this.dbLogin = "yourlogin";
-        this.dbPassword = "yourpassword";
-    }
-
-    public MSSQLQueryService() {
-        this.jdbcUrl = "jdbc:sqlserver://localhost:1433;database=TestDB;trustServerCertificate=true";
-        this.dbName = "TestDB";
-        this.dbLogin = "yourlogin";
-        this.dbPassword = "yourpassword";
+    public MSSQLQueryService(DBConnectionData dbConnectionData) {
+        this.jdbcUrl = dbConnectionData.jdbcUrl;
+        this.dbName = dbConnectionData.dbName;
+        this.dbLogin = dbConnectionData.dbLogin;
+        this.dbPassword = dbConnectionData.dbPassword;
     }
 
     public void showTables() {

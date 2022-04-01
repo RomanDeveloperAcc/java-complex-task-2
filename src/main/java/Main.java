@@ -1,6 +1,8 @@
 import interfaces.DBService;
+import models.DBConnectionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.ConnectionManagementService;
 import services.MSSQLJDBCService;
 import services.MSSQLQueryService;
 
@@ -24,22 +26,11 @@ public class Main {
 //            System.exit(0);
 //        }
 
-        Properties prop = new Properties();
-//        fileName = args[0];
-        fileName = "db.properties";
-        try (FileInputStream fis = new FileInputStream(fileName)) {
-            prop.load(fis);
-            jdbcUrl = prop.getProperty("jdbc.url");
-            dbName = prop.getProperty("db.name");
-            dbLogin = prop.getProperty("db.login");
-            dbPassword = prop.getProperty("db.password");
-        } catch (FileNotFoundException ex) {
-            logger.error("Provided file is not found. Default properties will be used.");
-        } catch (IOException ex) {
-            logger.error("Something went wrong while reading the file. Default properties will be used.");
-        }
+        ConnectionManagementService connectionManagementService = new ConnectionManagementService();
+        DBConnectionData dbConnectionData = connectionManagementService.getDBConnectionData("db.properties");
 
-        DBService mssqlQueryService = (jdbcUrl != null) ? new MSSQLJDBCService(jdbcUrl, dbName, dbLogin, dbPassword) : new MSSQLJDBCService();
+
+        DBService mssqlQueryService = new MSSQLJDBCService(dbConnectionData);
 
         mssqlQueryService.showTables();
         mssqlQueryService.showColumns();
