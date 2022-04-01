@@ -7,44 +7,44 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 
 public class MSSQLJDBCService implements DBService {
-    private final String JDBC_URL;
-    private final String DB_NAME;
-    private final String DB_LOGIN;
-    private final String DB_PASSWORD;
+    private final String jdbcUrl;
+    private final String dbName;
+    private final String dbLogin;
+    private final String dbPassword;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public MSSQLJDBCService(String JDBC_URL, String DB_NAME, String DB_LOGIN, String DB_PASSWORD) {
-        this.JDBC_URL = JDBC_URL;
-        this.DB_NAME = DB_NAME;
-        this.DB_LOGIN = DB_LOGIN;
-        this.DB_PASSWORD = DB_PASSWORD;
+    public MSSQLJDBCService(String jdbcUrl, String dbName, String dbLogin, String dbPassword) {
+        this.jdbcUrl = jdbcUrl;
+        this.dbName = dbName;
+        this.dbLogin = dbLogin;
+        this.dbPassword = dbPassword;
     }
 
-    public MSSQLJDBCService(String DB_NAME, String DB_LOGIN, String DB_PASSWORD) {
-        this.DB_NAME = DB_NAME;
-        this.JDBC_URL = "jdbc:sqlserver://localhost:1433;database=" + this.DB_NAME + ";trustServerCertificate=true";
-        this.DB_LOGIN = DB_LOGIN;
-        this.DB_PASSWORD = DB_PASSWORD;
+    public MSSQLJDBCService(String dbName, String dbLogin, String dbPassword) {
+        this.dbName = dbName;
+        this.jdbcUrl = "jdbc:sqlserver://localhost:1433;database=" + this.dbName + ";trustServerCertificate=true";
+        this.dbLogin = dbLogin;
+        this.dbPassword = dbPassword;
     }
 
-    public MSSQLJDBCService(String JDBC_URL, String DB_NAME) {
-        this.JDBC_URL = JDBC_URL;
-        this.DB_NAME = DB_NAME;
-        this.DB_LOGIN = "yourlogin";
-        this.DB_PASSWORD = "yourpassword";
+    public MSSQLJDBCService(String jdbcUrl, String dbName) {
+        this.jdbcUrl = jdbcUrl;
+        this.dbName = dbName;
+        this.dbLogin = "yourlogin";
+        this.dbPassword = "yourpassword";
     }
 
     public MSSQLJDBCService() {
-        this.JDBC_URL = "jdbc:sqlserver://localhost:1433;database=TestDB;trustServerCertificate=true";
-        this.DB_NAME = "TestDB";
-        this.DB_LOGIN = "yourlogin";
-        this.DB_PASSWORD = "yourpassword";
+        this.jdbcUrl = "jdbc:sqlserver://localhost:1433;database=TestDB;trustServerCertificate=true";
+        this.dbName = "TestDB";
+        this.dbLogin = "yourlogin";
+        this.dbPassword = "yourpassword";
     }
 
     public void showTables() {
         logger.info("Retrieving tables...");
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, DB_LOGIN, DB_PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
             String[] types = {"TABLE"};
 
@@ -61,7 +61,7 @@ public class MSSQLJDBCService implements DBService {
 
     public void showColumns() {
         logger.info("Retrieving columns...");
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, DB_LOGIN, DB_PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             //Retrieving the columns in the database
@@ -76,12 +76,33 @@ public class MSSQLJDBCService implements DBService {
     }
 
     public void showConstraints() {
+        logger.info("Retrieving constraints...");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
+            DatabaseMetaData metaData = connection.getMetaData();
 
+            logger.info("Retrieving primary keys...");
+            //Retrieving the columns in the database
+            ResultSet columns = metaData.getPrimaryKeys(null, null, "test");
+
+            while(columns.next()) {
+                logger.info("primary key : " + columns.getString("PK_NAME"));
+            }
+
+            logger.info("Retrieving foreign keys...");
+            //Retrieving the columns in the database
+            columns = metaData.getImportedKeys(null, null, "test");
+
+            while(columns.next()) {
+                logger.info("foreign key : " + columns.getString("FKTABLE_NAME"));
+            }
+        } catch (SQLException e) {
+            logger.error("Something went wrong. " + e.getMessage());
+        }
     }
 
     public void showIndexInfo() {
         logger.info("Retrieving indexes...");
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, DB_LOGIN, DB_PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             //Retrieving the indexes in the database

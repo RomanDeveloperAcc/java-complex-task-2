@@ -43,6 +43,7 @@ public class Main {
 
         mssqlQueryService.showTables();
         mssqlQueryService.showColumns();
+        mssqlQueryService.showConstraints();
         mssqlQueryService.showIndexInfo();
     }
 }
