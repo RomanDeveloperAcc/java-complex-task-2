@@ -5,6 +5,19 @@
         </encoder>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${user.home}/database.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.project.rbd" />
+    <logger name="com.project.rbd">
+        <appender-ref ref="FILE" />
+    </logger>
+
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>

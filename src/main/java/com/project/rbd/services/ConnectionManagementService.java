@@ -1,6 +1,6 @@
-package services;
+package com.project.rbd.services;
 
-import models.DBConnectionData;
+import com.project.rbd.models.DBConnectionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

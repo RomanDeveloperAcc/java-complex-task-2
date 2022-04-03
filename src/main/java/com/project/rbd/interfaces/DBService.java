@@ -1,4 +1,4 @@
-package interfaces;
+package com.project.rbd.interfaces;
 
 public interface DBService {
     public void showTables();

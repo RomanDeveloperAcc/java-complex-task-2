@@ -1,22 +1,24 @@
-import interfaces.DBService;
-import models.DBConnectionData;
-import services.ConnectionManagementService;
-import services.DBServiceFactory;
-import services.MSSQLJDBCService;
+package com.project.rbd;
+
+import com.project.rbd.interfaces.DBService;
+import com.project.rbd.models.DBConnectionData;
+import com.project.rbd.services.ConnectionManagementService;
+import com.project.rbd.services.DBServiceFactory;
 
 public class Main {
     public static void main(String[] args) {
         String fileName;
         String serviceType;
+        DBConnectionData dbConnectionData;
 //        if (args.length != 1) {
 //            logger.error("Wrong amount of parameters");
 //            System.exit(0);
 //        }
 
         fileName = "db.properties";
-        serviceType = "query";
+        serviceType = "jdbc";
         ConnectionManagementService connectionManagementService = new ConnectionManagementService();
-        DBConnectionData dbConnectionData = connectionManagementService.getDBConnectionData(fileName);
+        dbConnectionData = connectionManagementService.getDBConnectionData(fileName);
 
         try {
             DBService mssqlQueryService = new DBServiceFactory().createDbService(serviceType, dbConnectionData);
@@ -29,6 +31,5 @@ public class Main {
             System.out.println("The provided service type does not exist");
             System.exit(0);
         }
-
     }
 }

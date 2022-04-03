@@ -75,7 +75,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        Main
+                                        com.project.rbd.Main
                                     </mainClass>
                                 </manifest>
                             </archive>
@@ -88,7 +88,7 @@
 <!--                <configuration>-->
 <!--                    <archive>-->
 <!--                        <manifest>-->
-<!--                            <mainClass>rbd.project.Main</mainClass>-->
+<!--                            <mainClass>rbd.project.com.project.rbd.Main</mainClass>-->
 <!--                        </manifest>-->
 <!--                    </archive>-->
 <!--                    <descriptorRefs>-->
