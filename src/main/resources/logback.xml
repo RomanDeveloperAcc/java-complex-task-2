@@ -7,7 +7,7 @@
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${user.home}/database.log</file>
-        <append>true</append>
+        <append>false</append>
         <encoder>
             <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>
         </encoder>

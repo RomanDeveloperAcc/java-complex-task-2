@@ -13,21 +13,28 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        String fileName;
+        String source;
         String serviceType;
         DBConnectionData dbConnectionData;
-//        if (args.length != 2) {
-//            logger.error("Wrong amount of parameters");
-//            System.exit(0);
-//        }
-//
-//        fileName = args[0];
-//        serviceType = args[1];
 
-        fileName = "src/main/resources/db.properties";
-        serviceType = "query";
-        ConnectionManagementService connectionManagementService = new ConnectionManagementService();
-        dbConnectionData = connectionManagementService.getDBConnectionData(fileName);
+        if (args.length != 2) {
+            logger.error("Wrong amount of parameters");
+            System.exit(0);
+        }
+
+        source = args[0];
+        serviceType = args[1];
+
+        boolean isJdbcurl = source.split(":")[0].equals("jdbc");
+
+        if (isJdbcurl) {
+            dbConnectionData = new DBConnectionData();
+            dbConnectionData.jdbcUrl = source;
+        } else {
+            ConnectionManagementService connectionManagementService = new ConnectionManagementService();
+            dbConnectionData = connectionManagementService.getDBConnectionData(source);
+        }
+
 
         try {
             DBService mssqlQueryService = new DBServiceFactory().createDbService(serviceType, dbConnectionData);
