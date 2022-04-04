@@ -23,19 +23,10 @@ public class ConnectionManagementService {
             dbConnectionData.dbLogin = prop.getProperty("db.login");
             dbConnectionData.dbPassword = prop.getProperty("db.password");
         } catch (FileNotFoundException ex) {
-            logger.error("Provided file is not found. Default properties will be used.");
-
-            try (FileInputStream fis = new FileInputStream("src/main/resources/" + fileName)) {
-                prop.load(fis);
-                dbConnectionData.jdbcUrl = prop.getProperty("jdbc.url");
-                dbConnectionData.dbName = prop.getProperty("db.name");
-                dbConnectionData.dbLogin = prop.getProperty("db.login");
-                dbConnectionData.dbPassword = prop.getProperty("db.password");
-            } catch (IOException e) {
-                logger.error("Something went wrong while reading the file. Default properties will be used.");
-            }
+            logger.error("Provided file is not found.");
+            System.exit(0);
         } catch (IOException ex) {
-            logger.error("Something went wrong while reading the file. Default properties will be used.");
+            logger.error("Something went wrong while reading the file.");
         }
 
         return dbConnectionData;

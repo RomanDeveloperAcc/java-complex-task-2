@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MSSQLJDBCService implements DBService {
     private final String jdbcUrl;
@@ -22,7 +23,9 @@ public class MSSQLJDBCService implements DBService {
         this.dbPassword = dbConnectionData.dbPassword;
     }
 
-    public void showTables() {
+    public ArrayList<String> retrieveTables() {
+        ArrayList<String> tableNames = new ArrayList<>();
+
         logger.info("Retrieving tables...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -32,65 +35,75 @@ public class MSSQLJDBCService implements DBService {
             ResultSet tables = metaData.getTables(null, null, null, types);
 
             while(tables.next()) {
-                logger.info("table : " + tables.getString("TABLE_NAME"));
+                String tableName = tables.getString("TABLE_NAME");
+                logger.info("table : " + tableName);
+                tableNames.add(tableName);
             }
+            logger.info("Retrieving tables COMPLETED");
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return tableNames;
     }
 
-    public void showColumns() {
-        logger.info("Retrieving columns...");
+    public void showColumns(String tableName) {
+        logger.info("Retrieving columns for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             //Retrieving the columns in the database
-            ResultSet columns = metaData.getColumns(null, null, "test", null);
+            ResultSet columns = metaData.getColumns(null, null, tableName, null);
 
             while(columns.next()) {
                 logger.info("column : " + columns.getString("COLUMN_NAME"));
             }
+            logger.info("Retrieving columns COMPLETED");
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
     }
 
-    public void showConstraints() {
-        logger.info("Retrieving constraints...");
+    public void showConstraints(String tableName) {
+        logger.info("Retrieving constraints for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             logger.info("Retrieving primary keys...");
-            //Retrieving the columns in the database
-            ResultSet columns = metaData.getPrimaryKeys(null, null, "test");
+            //Retrieving the constraints in the database
+            ResultSet columns = metaData.getPrimaryKeys(null, null, tableName);
 
             while(columns.next()) {
                 logger.info("primary key : " + columns.getString("PK_NAME"));
             }
 
             logger.info("Retrieving foreign keys...");
-            //Retrieving the columns in the database
-            columns = metaData.getImportedKeys(null, null, "test");
+
+            columns = metaData.getImportedKeys(null, null, tableName);
 
             while(columns.next()) {
                 logger.info("foreign key : " + columns.getString("FKTABLE_NAME"));
             }
+            logger.info("Retrieving constraints COMPLETED");
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
     }
 
-    public void showIndexInfo() {
-        logger.info("Retrieving indexes...");
+    public void showIndexInfo(String tableName) {
+        logger.info("Retrieving indexes for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
 
             //Retrieving the indexes in the database
-            ResultSet columns = metaData.getIndexInfo(null, null, "test", true, false);
+            ResultSet columns = metaData.getIndexInfo(null, null, tableName, true, false);
 
             while(columns.next()) {
-                logger.info("index : " + columns.getString("INDEX_NAME"));
+                if (columns.getString("INDEX_NAME") != null) {
+                    logger.info("index : " + columns.getString("INDEX_NAME"));
+                }
             }
+            logger.info("Retrieving indexes COMPLETED");
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
