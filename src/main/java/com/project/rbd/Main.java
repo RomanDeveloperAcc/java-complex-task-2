@@ -7,7 +7,7 @@ import com.project.rbd.services.DBServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -39,7 +39,7 @@ public class Main {
         try {
             DBService mssqlQueryService = new DBServiceFactory().createDbService(serviceType, dbConnectionData);
 
-            ArrayList<String> tables = mssqlQueryService.retrieveTables();
+            List<String> tables = mssqlQueryService.retrieveTables();
 
             for (String table : tables) {
                 mssqlQueryService.showColumns(table);
