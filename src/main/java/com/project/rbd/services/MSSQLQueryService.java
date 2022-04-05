@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MSSQLQueryService implements DBService {
     private final String jdbcUrl;
@@ -23,8 +24,8 @@ public class MSSQLQueryService implements DBService {
         this.dbPassword = dbConnectionData.dbPassword;
     }
 
-    public ArrayList<String> retrieveTables() {
-        ArrayList<String> tableNames = new ArrayList<>();
+    public List<String> retrieveTables() {
+        List<String> tableNames = new ArrayList<>();
 
         logger.info("Retrieving tables...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
@@ -46,7 +47,9 @@ public class MSSQLQueryService implements DBService {
         return tableNames;
     }
 
-    public void showColumns(String tableName) {
+    public List<String> showColumns(String tableName) {
+        List<String> columnNames = new ArrayList<>();
+
         logger.info("Retrieving columns for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
              PreparedStatement statement = connection.prepareStatement("select * from INFORMATION_SCHEMA.COLUMNS where table_name = '" + tableName + "'");
@@ -61,9 +64,12 @@ public class MSSQLQueryService implements DBService {
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return columnNames;
     }
 
-    public void showConstraints(String tableName) {
+    public List<String> showConstraints(String tableName) {
+        List<String> constraintNames = new ArrayList<>();
         logger.info("Retrieving constraints for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             PreparedStatement statement = connection.prepareStatement("select * from sys.key_constraints where object_id = object_id('" + tableName + "')");
@@ -85,9 +91,12 @@ public class MSSQLQueryService implements DBService {
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return constraintNames;
     }
 
-    public void showIndexInfo(String tableName) {
+    public List<String> showIndexInfo(String tableName) {
+        List<String> indexNames = new ArrayList<>();
         logger.info("Retrieving indexes for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
              PreparedStatement statement = connection.prepareStatement("select * from sys.indexes where object_id = object_id('" + tableName + "')");
@@ -104,5 +113,7 @@ public class MSSQLQueryService implements DBService {
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return indexNames;
     }
 }

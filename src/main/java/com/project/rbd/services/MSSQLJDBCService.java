@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MSSQLJDBCService implements DBService {
     private final String jdbcUrl;
@@ -23,8 +24,8 @@ public class MSSQLJDBCService implements DBService {
         this.dbPassword = dbConnectionData.dbPassword;
     }
 
-    public ArrayList<String> retrieveTables() {
-        ArrayList<String> tableNames = new ArrayList<>();
+    public List<String> retrieveTables() {
+        List<String> tableNames = new ArrayList<>();
 
         logger.info("Retrieving tables...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
@@ -47,7 +48,9 @@ public class MSSQLJDBCService implements DBService {
         return tableNames;
     }
 
-    public void showColumns(String tableName) {
+    public List<String> showColumns(String tableName) {
+        List<String> columnNames = new ArrayList<>();
+
         logger.info("Retrieving columns for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -56,15 +59,20 @@ public class MSSQLJDBCService implements DBService {
             ResultSet columns = metaData.getColumns(null, null, tableName, null);
 
             while(columns.next()) {
-                logger.info("column : " + columns.getString("COLUMN_NAME"));
+                String columnName = columns.getString("COLUMN_NAME");
+                logger.info("column : " + columnName);
+                columnNames.add(columnName);
             }
             logger.info("Retrieving columns COMPLETED");
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return columnNames;
     }
 
-    public void showConstraints(String tableName) {
+    public List<String> showConstraints(String tableName) {
+        List<String> constraintNames = new ArrayList<>();
         logger.info("Retrieving constraints for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -88,9 +96,12 @@ public class MSSQLJDBCService implements DBService {
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return constraintNames;
     }
 
-    public void showIndexInfo(String tableName) {
+    public List<String> showIndexInfo(String tableName) {
+        List<String> indexNames = new ArrayList<>();
         logger.info("Retrieving indexes for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
@@ -107,5 +118,7 @@ public class MSSQLJDBCService implements DBService {
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
+
+        return indexNames;
     }
 }
