@@ -1,7 +1,7 @@
 package com.project.rbd;
 
-import com.project.rbd.interfaces.DBService;
-import com.project.rbd.models.DBConnectionData;
+import com.project.rbd.services.interfaces.DBService;
+import com.project.rbd.dto.DBConnectionData;
 import com.project.rbd.services.ConnectionManagementService;
 import com.project.rbd.services.DBServiceFactory;
 import org.slf4j.Logger;

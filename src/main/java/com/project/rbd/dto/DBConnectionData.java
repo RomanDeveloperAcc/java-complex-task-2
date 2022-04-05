@@ -1,4 +1,4 @@
-package com.project.rbd.models;
+package com.project.rbd.dto;
 
 public class DBConnectionData {
     public String jdbcUrl;

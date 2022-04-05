@@ -1,7 +1,7 @@
 package com.project.rbd.services;
 
-import com.project.rbd.interfaces.DBService;
-import com.project.rbd.models.DBConnectionData;
+import com.project.rbd.services.interfaces.DBService;
+import com.project.rbd.dto.DBConnectionData;
 
 public class DBServiceFactory {
     public DBService createDbService(String type, DBConnectionData dbConnectionData) throws Exception {

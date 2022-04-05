@@ -1,4 +1,4 @@
-package com.project.rbd.interfaces;
+package com.project.rbd.services.interfaces;
 
 import java.util.ArrayList;
 
