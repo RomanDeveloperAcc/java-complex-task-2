@@ -1,4 +1,4 @@
-package com.project.rbd.dto;
+package com.project.rbd.dto.db;
 
 public class DBConnectionData {
     public String jdbcUrl;
