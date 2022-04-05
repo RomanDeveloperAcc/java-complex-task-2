@@ -25,9 +25,9 @@ public class Main {
         source = args[0];
         serviceType = args[1];
 
-        boolean isJdbcurl = source.split(":")[0].equals("jdbc");
+        boolean isJdbcUrl = source.split(":")[0].equals("jdbc");
 
-        if (isJdbcurl) {
+        if (isJdbcUrl) {
             dbConnectionData = new DBConnectionData();
             dbConnectionData.jdbcUrl = source;
         } else {

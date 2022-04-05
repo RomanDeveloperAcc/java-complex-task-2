@@ -28,10 +28,10 @@ public class MSSQLQueryService implements DBService {
 
         logger.info("Retrieving tables...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
-             Statement statement = connection.createStatement();
+             PreparedStatement statement = connection.prepareStatement("select * from INFORMATION_SCHEMA.TABLES");
         ) {
             //Retrieving the tables in the database
-            ResultSet tables = statement.executeQuery("select * from INFORMATION_SCHEMA.TABLES");
+            ResultSet tables = statement.executeQuery();
 
             while(tables.next()) {
                 String tableName = tables.getString("TABLE_NAME");
@@ -49,10 +49,10 @@ public class MSSQLQueryService implements DBService {
     public void showColumns(String tableName) {
         logger.info("Retrieving columns for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
-             Statement statement = connection.createStatement();
+             PreparedStatement statement = connection.prepareStatement("select * from INFORMATION_SCHEMA.COLUMNS where table_name = '" + tableName + "'");
         ) {
             //Retrieving the columns in the database
-            ResultSet columns = statement.executeQuery("select * from INFORMATION_SCHEMA.COLUMNS where table_name = '" + tableName + "'");
+            ResultSet columns = statement.executeQuery();
 
             while(columns.next()) {
                 logger.info(columns.getString("COLUMN_NAME"));
@@ -65,22 +65,23 @@ public class MSSQLQueryService implements DBService {
 
     public void showConstraints(String tableName) {
         logger.info("Retrieving constraints for table " + tableName + "...");
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
-             Statement statement = connection.createStatement();
-        ) {
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
+            PreparedStatement statement = connection.prepareStatement("select * from sys.key_constraints where object_id = object_id('" + tableName + "')");
             //Retrieving the constraints in the database
-            ResultSet constraints = statement.executeQuery("select * from sys.key_constraints where object_id = object_id('" + tableName + "')");
+            ResultSet constraints = statement.executeQuery();
 
             while(constraints.next()) {
                 logger.info(constraints.getString("name"));
             }
 
-            constraints = statement.executeQuery("select * from sys.foreign_keys where object_id = object_id('" + tableName + "')");
+            statement = connection.prepareStatement("select * from sys.foreign_keys where object_id = object_id('" + tableName + "')");
+            constraints = statement.executeQuery();
 
             while(constraints.next()) {
                 logger.info(constraints.getString("name"));
             }
             logger.info("Retrieving constraints COMPLETED");
+            statement.close();
         } catch (SQLException e) {
             logger.error("Something went wrong. " + e.getMessage());
         }
@@ -89,10 +90,10 @@ public class MSSQLQueryService implements DBService {
     public void showIndexInfo(String tableName) {
         logger.info("Retrieving indexes for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
-             Statement statement = connection.createStatement();
+             PreparedStatement statement = connection.prepareStatement("select * from sys.indexes where object_id = object_id('" + tableName + "')");
         ) {
             //Retrieving the indexes in the database
-            ResultSet indexes = statement.executeQuery("select * from sys.indexes where object_id = object_id('" + tableName + "')");
+            ResultSet indexes = statement.executeQuery();
 
             while(indexes.next()) {
                 if (indexes.getString("name") != null) {
