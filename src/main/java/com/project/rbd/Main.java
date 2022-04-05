@@ -1,5 +1,6 @@
 package com.project.rbd;
 
+import com.project.rbd.services.EntityPrinterService;
 import com.project.rbd.services.interfaces.DBService;
 import com.project.rbd.dto.db.DBConnectionData;
 import com.project.rbd.services.ConnectionManagementService;
@@ -40,11 +41,18 @@ public class Main {
             DBService mssqlQueryService = new DBServiceFactory().createDbService(serviceType, dbConnectionData);
 
             List<String> tables = mssqlQueryService.retrieveTables();
+            EntityPrinterService entityPrinter = new EntityPrinterService();
+
+            entityPrinter.showEntityData("tables", tables);
 
             for (String table : tables) {
-                mssqlQueryService.showColumns(table);
-                mssqlQueryService.showConstraints(table);
-                mssqlQueryService.showIndexInfo(table);
+                List<String> columns = mssqlQueryService.showColumns(table);
+                List<String> constraints = mssqlQueryService.showConstraints(table);
+                List<String> indexes = mssqlQueryService.showIndexInfo(table);
+
+                entityPrinter.showEntityData("columns", columns);
+                entityPrinter.showEntityData("constraints", constraints);
+                entityPrinter.showEntityData("indexes", indexes);
             }
         } catch (Exception e) {
             logger.error("The provided service type does not exist");

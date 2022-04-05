@@ -30,14 +30,13 @@ public class MSSQLJDBCService implements DBService {
         logger.info("Retrieving tables...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
             DatabaseMetaData metaData = connection.getMetaData();
-            String[] types = {"TABLE"};
+            String[] types = { "TABLE" };
 
             //Retrieving the tables in the database
             ResultSet tables = metaData.getTables(null, null, null, types);
 
             while(tables.next()) {
                 String tableName = tables.getString("TABLE_NAME");
-                logger.info("table : " + tableName);
                 tableNames.add(tableName);
             }
             logger.info("Retrieving tables COMPLETED");
@@ -60,7 +59,6 @@ public class MSSQLJDBCService implements DBService {
 
             while(columns.next()) {
                 String columnName = columns.getString("COLUMN_NAME");
-                logger.info("column : " + columnName);
                 columnNames.add(columnName);
             }
             logger.info("Retrieving columns COMPLETED");
@@ -79,18 +77,20 @@ public class MSSQLJDBCService implements DBService {
 
             logger.info("Retrieving primary keys...");
             //Retrieving the constraints in the database
-            ResultSet columns = metaData.getPrimaryKeys(null, null, tableName);
+            ResultSet constraints = metaData.getPrimaryKeys(null, null, tableName);
 
-            while(columns.next()) {
-                logger.info("primary key : " + columns.getString("PK_NAME"));
+            while(constraints.next()) {
+                String constraintName = constraints.getString("PK_NAME");
+                constraintNames.add(constraintName);
             }
 
             logger.info("Retrieving foreign keys...");
 
-            columns = metaData.getImportedKeys(null, null, tableName);
+            constraints = metaData.getImportedKeys(null, null, tableName);
 
-            while(columns.next()) {
-                logger.info("foreign key : " + columns.getString("FKTABLE_NAME"));
+            while(constraints.next()) {
+                String constraintName = constraints.getString("FKTABLE_NAME");
+                constraintNames.add(constraintName);
             }
             logger.info("Retrieving constraints COMPLETED");
         } catch (SQLException e) {
@@ -107,11 +107,12 @@ public class MSSQLJDBCService implements DBService {
             DatabaseMetaData metaData = connection.getMetaData();
 
             //Retrieving the indexes in the database
-            ResultSet columns = metaData.getIndexInfo(null, null, tableName, true, false);
+            ResultSet indexes = metaData.getIndexInfo(null, null, tableName, true, false);
 
-            while(columns.next()) {
-                if (columns.getString("INDEX_NAME") != null) {
-                    logger.info("index : " + columns.getString("INDEX_NAME"));
+            while(indexes.next()) {
+                if (indexes.getString("INDEX_NAME") != null) {
+                    String indexName = indexes.getString("INDEX_NAME");
+                    indexNames.add(indexName);
                 }
             }
             logger.info("Retrieving indexes COMPLETED");

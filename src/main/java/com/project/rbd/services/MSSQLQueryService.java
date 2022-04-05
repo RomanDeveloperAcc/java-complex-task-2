@@ -36,7 +36,6 @@ public class MSSQLQueryService implements DBService {
 
             while(tables.next()) {
                 String tableName = tables.getString("TABLE_NAME");
-                logger.info(tableName);
                 tableNames.add(tableName);
             }
             logger.info("Retrieving tables COMPLETED");
@@ -58,7 +57,8 @@ public class MSSQLQueryService implements DBService {
             ResultSet columns = statement.executeQuery();
 
             while(columns.next()) {
-                logger.info(columns.getString("COLUMN_NAME"));
+                String columnName = columns.getString("COLUMN_NAME");
+                columnNames.add(columnName);
             }
             logger.info("Retrieving columns COMPLETED");
         } catch (SQLException e) {
@@ -77,15 +77,18 @@ public class MSSQLQueryService implements DBService {
             ResultSet constraints = statement.executeQuery();
 
             while(constraints.next()) {
-                logger.info(constraints.getString("name"));
+                String constraintName = constraints.getString("name");
+                constraintNames.add(constraintName);
             }
 
             statement = connection.prepareStatement("select * from sys.foreign_keys where object_id = object_id('" + tableName + "')");
             constraints = statement.executeQuery();
 
             while(constraints.next()) {
-                logger.info(constraints.getString("name"));
+                String constraintName = constraints.getString("name");
+                constraintNames.add(constraintName);
             }
+
             logger.info("Retrieving constraints COMPLETED");
             statement.close();
         } catch (SQLException e) {
@@ -106,7 +109,8 @@ public class MSSQLQueryService implements DBService {
 
             while(indexes.next()) {
                 if (indexes.getString("name") != null) {
-                    logger.info(indexes.getString("name"));
+                    String indexName = indexes.getString("name");
+                    indexNames.add(indexName);
                 }
             }
             logger.info("Retrieving indexes COMPLETED");
