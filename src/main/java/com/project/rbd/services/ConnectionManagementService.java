@@ -27,6 +27,7 @@ public class ConnectionManagementService {
             System.exit(0);
         } catch (IOException ex) {
             logger.error("Something went wrong while reading the file.");
+            System.exit(0);
         }
 
         return dbConnectionData;
