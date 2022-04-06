@@ -24,7 +24,7 @@ public class MSSQLQueryService implements DBService {
         this.dbPassword = dbConnectionData.dbPassword;
     }
 
-    public List<String> retrieveTables() {
+    public List<String> getTables() {
         List<String> tableNames = new ArrayList<>();
 
         logger.info("Retrieving tables...");
@@ -46,7 +46,29 @@ public class MSSQLQueryService implements DBService {
         return tableNames;
     }
 
-    public List<String> showColumns(String tableName) {
+    public List<String> getViews() {
+        List<String> viewNames = new ArrayList<>();
+
+        logger.info("Retrieving views...");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
+             PreparedStatement statement = connection.prepareStatement("select * from INFORMATION_SCHEMA.VIEWS");
+        ) {
+            //Retrieving the views in the database
+            ResultSet views = statement.executeQuery();
+
+            while(views.next()) {
+                String viewName = views.getString("VIEW_NAME");
+                viewNames.add(viewName);
+            }
+            logger.info("Retrieving views COMPLETED");
+        } catch (SQLException e) {
+            logger.error("Something went wrong. " + e.getMessage());
+        }
+
+        return viewNames;
+    }
+
+    public List<String> getColumns(String tableName) {
         List<String> columnNames = new ArrayList<>();
 
         logger.info("Retrieving columns for table " + tableName + "...");
@@ -68,7 +90,7 @@ public class MSSQLQueryService implements DBService {
         return columnNames;
     }
 
-    public List<String> showConstraints(String tableName) {
+    public List<String> getConstraints(String tableName) {
         List<String> constraintNames = new ArrayList<>();
         logger.info("Retrieving constraints for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword)) {
@@ -98,7 +120,7 @@ public class MSSQLQueryService implements DBService {
         return constraintNames;
     }
 
-    public List<String> showIndexInfo(String tableName) {
+    public List<String> getIndexes(String tableName) {
         List<String> indexNames = new ArrayList<>();
         logger.info("Retrieving indexes for table " + tableName + "...");
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
@@ -119,5 +141,84 @@ public class MSSQLQueryService implements DBService {
         }
 
         return indexNames;
+    }
+
+    public List<String> getFunctions() {
+        List<String> functionNames = new ArrayList<>();
+
+        logger.info("Retrieving functions...");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
+             PreparedStatement statement = connection.prepareStatement("\n" +
+                     "\n" +
+                     "SELECT name, type_desc \n" +
+                     "  FROM sys.sql_modules m \n" +
+                     "INNER JOIN sys.objects o \n" +
+                     "        ON m.object_id=o.object_id\n" +
+                     "WHERE type_desc like '%function%'\n" +
+                     "\n");
+        ) {
+            //Retrieving the functions in the database
+            ResultSet functions = statement.executeQuery();
+
+            while(functions.next()) {
+                String functionName = functions.getString("name");
+                functionNames.add(functionName);
+            }
+            logger.info("Retrieving functions COMPLETED");
+        } catch (SQLException e) {
+            logger.error("Something went wrong. " + e.getMessage());
+        }
+
+        return functionNames;
+    }
+
+    public List<String> getProcedures() {
+        List<String> procedureNames = new ArrayList<>();
+
+        logger.info("Retrieving procedures...");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
+             PreparedStatement statement = connection.prepareStatement("Select [NAME] from sysobjects where type = 'P' and category = 0");
+        ) {
+            //Retrieving the procedures in the database
+            ResultSet procedures = statement.executeQuery();
+
+            while(procedures.next()) {
+                String procedureName = procedures.getString("NAME");
+                procedureNames.add(procedureName);
+            }
+            logger.info("Retrieving procedures COMPLETED");
+        } catch (SQLException e) {
+            logger.error("Something went wrong. " + e.getMessage());
+        }
+
+        return procedureNames;
+    }
+
+    public List<String> getTriggers() {
+        List<String> triggerNames = new ArrayList<>();
+
+        logger.info("Retrieving triggers...");
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, dbLogin, dbPassword);
+             PreparedStatement statement = connection.prepareStatement("SELECT  \n" +
+                     "    name,\n" +
+                     "    is_instead_of_trigger\n" +
+                     "FROM \n" +
+                     "    sys.triggers  \n" +
+                     "WHERE \n" +
+                     "    type = 'TR'");
+        ) {
+            //Retrieving the triggers in the database
+            ResultSet triggers = statement.executeQuery();
+
+            while(triggers.next()) {
+                String triggerName = triggers.getString("NAME");
+                triggerNames.add(triggerName);
+            }
+            logger.info("Retrieving triggers COMPLETED");
+        } catch (SQLException e) {
+            logger.error("Something went wrong. " + e.getMessage());
+        }
+
+        return triggerNames;
     }
 }
