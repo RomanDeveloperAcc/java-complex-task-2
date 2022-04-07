@@ -1,6 +1,7 @@
 package com.project.rbd.service;
 
 import com.project.rbd.dto.db.DBConnectionData;
+import com.project.rbd.exception.UnknownServiceTypeException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -12,7 +13,7 @@ public class DBServiceFactoryTest {
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void createDbService__shouldReturnQueryService() throws Exception {
+    public void createDbService__shouldReturnQueryService() throws UnknownServiceTypeException {
         DBServiceFactory dbServiceFactory = new DBServiceFactory();
         DBService dbService;
 
@@ -25,7 +26,7 @@ public class DBServiceFactoryTest {
     }
 
     @Test
-    public void createDbService__shouldReturnJdbcService() throws Exception {
+    public void createDbService__shouldReturnJdbcService() throws UnknownServiceTypeException {
         DBServiceFactory dbServiceFactory = new DBServiceFactory();
         DBService dbService;
 
@@ -38,7 +39,7 @@ public class DBServiceFactoryTest {
     }
 
     @Test()
-    public void createDbService__shouldThrowExceptionForUnknownType() throws Exception {
+    public void createDbService__shouldThrowExceptionForUnknownType() throws UnknownServiceTypeException {
         DBServiceFactory dbServiceFactory = new DBServiceFactory();
 
         String testType = "test";

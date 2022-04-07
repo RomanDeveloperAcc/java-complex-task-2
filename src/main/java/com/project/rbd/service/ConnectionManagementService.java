@@ -1,6 +1,7 @@
 package com.project.rbd.service;
 
 import com.project.rbd.dto.db.DBConnectionData;
+import com.project.rbd.exception.ConnectionEstablishmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +23,14 @@ public class ConnectionManagementService {
             dbConnectionData.dbName = prop.getProperty("db.name");
             dbConnectionData.dbLogin = prop.getProperty("db.login");
             dbConnectionData.dbPassword = prop.getProperty("db.password");
-        } catch (FileNotFoundException ex) {
-            logger.error("Provided file is not found.");
-            System.exit(0);
-        } catch (IOException ex) {
-            logger.error("Something went wrong while reading the file.");
-            System.exit(0);
+        } catch (FileNotFoundException e) {
+            String errorMessage = "Provided file is not found.";
+            logger.error(errorMessage);
+            throw new ConnectionEstablishmentException(errorMessage, e);
+        } catch (IOException e) {
+            String errorMessage = "Something went wrong while reading the file.";
+            logger.error(errorMessage);
+            throw new ConnectionEstablishmentException(errorMessage, e);
         }
 
         return dbConnectionData;
