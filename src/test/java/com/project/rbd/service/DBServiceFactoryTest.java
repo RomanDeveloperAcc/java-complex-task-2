@@ -45,7 +45,7 @@ public class DBServiceFactoryTest {
         String testType = "test";
         DBConnectionData dbConnectionData = new DBConnectionData();
 
-        exception.expect(Exception.class);
+        exception.expect(UnknownServiceTypeException.class);
 
         dbServiceFactory.createDbService(testType, dbConnectionData);
     }

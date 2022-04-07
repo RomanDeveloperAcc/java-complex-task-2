@@ -18,13 +18,17 @@ public class EntityPrinterServiceTest {
         EntityPrinterService entityPrinter = new EntityPrinterService();
 
         String testEntityName = "test";
+        String firstTestListValue = "first";
+        String secondTestListValue = "second";
 
         List<String> testList = new ArrayList<>();
-        testList.add("first");
-        testList.add("second");
+        testList.add(firstTestListValue);
+        testList.add(secondTestListValue);
 
         entityPrinter.showEntityData(testEntityName, testList);
 
-        assertNotNull(outContent.toString());
+        assertTrue(outContent.toString().contains(testEntityName));
+        assertTrue(outContent.toString().contains(firstTestListValue));
+        assertTrue(outContent.toString().contains(secondTestListValue));
     }
 }
