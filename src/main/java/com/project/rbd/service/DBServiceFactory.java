@@ -1,7 +1,8 @@
-package com.project.rbd.services;
+package com.project.rbd.service;
 
-import com.project.rbd.services.interfaces.DBService;
 import com.project.rbd.dto.db.DBConnectionData;
+import com.project.rbd.service.impl.MSSQLJDBCService;
+import com.project.rbd.service.impl.MSSQLQueryService;
 
 public class DBServiceFactory {
     public DBService createDbService(String type, DBConnectionData dbConnectionData) throws Exception {

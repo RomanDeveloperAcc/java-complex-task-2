@@ -1,4 +1,4 @@
-package com.project.rbd.services;
+package com.project.rbd.service;
 
 import org.junit.Test;
 

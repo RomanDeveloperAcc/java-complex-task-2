@@ -1,4 +1,4 @@
-package com.project.rbd.services.interfaces;
+package com.project.rbd.service;
 
 import java.util.List;
 

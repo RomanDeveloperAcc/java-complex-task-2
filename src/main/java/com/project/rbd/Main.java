@@ -1,10 +1,10 @@
 package com.project.rbd;
 
-import com.project.rbd.services.EntityPrinterService;
-import com.project.rbd.services.interfaces.DBService;
+import com.project.rbd.service.EntityPrinterService;
+import com.project.rbd.service.DBService;
 import com.project.rbd.dto.db.DBConnectionData;
-import com.project.rbd.services.ConnectionManagementService;
-import com.project.rbd.services.DBServiceFactory;
+import com.project.rbd.service.ConnectionManagementService;
+import com.project.rbd.service.DBServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

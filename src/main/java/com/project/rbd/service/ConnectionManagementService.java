@@ -1,4 +1,4 @@
-package com.project.rbd.services;
+package com.project.rbd.service;
 
 import com.project.rbd.dto.db.DBConnectionData;
 import org.slf4j.Logger;

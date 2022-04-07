@@ -1,7 +1,6 @@
-package com.project.rbd.services;
+package com.project.rbd.service;
 
 import com.project.rbd.dto.db.DBConnectionData;
-import com.project.rbd.services.interfaces.DBService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
