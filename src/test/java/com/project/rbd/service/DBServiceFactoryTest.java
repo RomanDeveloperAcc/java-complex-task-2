@@ -38,7 +38,7 @@ public class DBServiceFactoryTest {
         assertEquals("MSSQLJDBCService", dbService.getClass().getSimpleName());
     }
 
-    @Test()
+    @Test
     public void createDbService__shouldThrowExceptionForUnknownType() throws UnknownServiceTypeException {
         DBServiceFactory dbServiceFactory = new DBServiceFactory();
 

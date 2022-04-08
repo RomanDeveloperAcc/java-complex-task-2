@@ -1,6 +1,5 @@
 package com.project.rbd;
 
-import com.project.rbd.exception.ApplicationParametersException;
 import com.project.rbd.service.EntityPrinterService;
 import com.project.rbd.service.DBService;
 import com.project.rbd.dto.db.DBConnectionData;
@@ -14,7 +13,7 @@ import java.util.List;
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-    public static void main(String[] args) throws ApplicationParametersException {
+    public static void main(String[] args) {
         String source;
         String serviceType;
         DBConnectionData dbConnectionData;
@@ -22,7 +21,7 @@ public class Main {
         if (args.length != 2) {
             String errorMessage = "Wrong amount of parameters";
             logger.error(errorMessage);
-            throw new ApplicationParametersException(errorMessage);
+            System.exit(1);
         }
 
         source = args[0];

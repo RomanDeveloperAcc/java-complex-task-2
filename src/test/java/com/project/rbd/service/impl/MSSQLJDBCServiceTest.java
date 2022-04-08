@@ -22,7 +22,6 @@ public class MSSQLJDBCServiceTest {
 
         DBConnectionData dbConnectionData = new DBConnectionData();
         mssqljdbcService = new MSSQLJDBCService(dbConnectionData);
-
     }
 
     @Test
